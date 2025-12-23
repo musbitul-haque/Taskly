@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskly Admin Panel</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+  <!-- Login Page Container -->
+  <div id="loginPage" class="admin-container">
+    <div class="admin-frame">
+      <div class="admin-content">
+        <div class="auth-area">
+          <!-- Taskly Logo Inside the Box -->
+          <div class="logo-inside-box">Taskly</div>
+          <div class="welcome">Admin Portal</div>
+          <div class="password-wrapper">
+            <input id="adminPassword" type="password" placeholder="Admin Password" />
+            <span class="toggle-password" id="toggleAdminPass">👁️‍🗨️</span>
+          </div>
+
+          <button class="btn-primary" id="loginBtn">Sign In as Admin</button>
+
+          <div class="muted" style="text-align: center; margin-top: 16px;">
+            <a href="index.html" class="link">Back to User App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Page Container -->
+  <div id="dashboardPage" class="admin-dashboard hidden">
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="admin-header-left">
+        <button class="hamburger">☰</button>
+        <h1>Taskly Admin Panel</h1>
+      </div>
+      <div class="admin-header-right">
+        <button class="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <div class="sidebar-item active" data-section="dashboard">
+          📊 Dashboard
+        </div>
+        <div class="sidebar-item" data-section="users">
+          👥 All Users
+        </div>
+        <div class="sidebar-item" data-section="penalties">
+          ⚠️ Penalties
+        </div>
+        <div class="sidebar-item" data-section="addAdmin">
+          ⬆️ Add Admin
+        </div>
+        <div class="sidebar-item" data-section="appearance">
+          🎨 Appearance
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="admin-content-area">
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section-content active">
+          <h2>Dashboard Overview</h2>
+
+          <!-- Stats Cards -->
+          <div class="admin-stats-grid">
+            <div class="stat-card">
+              <h3>Total Users</h3>
+              <p class="stat-number" id="totalUsers">0</p>
+              <div class="stat-trend">All registered accounts</div>
+            </div>
+            <div class="stat-card">
+              <h3>Active Users</h3>
+              <p class="stat-number" id="activeUsers">0</p>
+              <div class="stat-trend">Currently not suspended</div>
+            </div>
+            <div class="stat-card">
+              <h3>Administrators</h3>
+              <p class="stat-number" id="adminsCount">0</p>
+              <div class="stat-trend">Admin accounts</div>
+            </div>
+            <div class="stat-card">
+              <h3>Suspended</h3>
+              <p class="stat-number" id="suspendedCount">0</p>
+              <div class="stat-trend">Temporarily suspended</div>
+            </div>
+          </div>
+
+          <!-- Recent Users -->
+          <h2 style="margin-top: 40px;">Recent Users</h2>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Type</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentUsersTable">
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="usersSection" class="section-content">
+          <h2>All Users <span class="badge" id="usersCount">0</span></h2>
+
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search by name or email...">
+            <button class="search-btn">Search</button>
+          </div>
+
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Account Type</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allUsersTable">
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Penalties Section -->
+        <div id="penaltiesSection" class="section-content">
+          <h2>Penalties & Restrictions</h2>
+
+          <div class="penalties-grid">
+            <div class="penalty-form-card">
+              <h3>Suspend Account</h3>
+              <form class="penalty-form">
+                <select id="penaltyUserSelect" class="penalty-select">
+                  <option value="">Select user...</option>
+                </select>
+                <input type="number" id="penaltyDays" class="penalty-input" placeholder="Days (1-30)" min="1" max="30">
+                <textarea id="penaltyReason" class="penalty-textarea" placeholder="Reason for suspension..."></textarea>
+                <button type="button" class="btn-primary" id="applyPenaltyBtn">Apply Penalty</button>
+              </form>
+            </div>
+
+            <div class="penalties-list-card">
+              <h3>Active Penalties</h3>
+              <div id="activePenaltiesList">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Admin Section -->
+        <div id="addAdminSection" class="section-content">
+          <h2>Add New Admin</h2>
+
+          <div class="add-admin-form">
+            <select id="existingUserSelect" class="add-admin-select">
+              <option value="">Select existing user...</option>
+            </select>
+
+            <div class="add-admin-or">OR</div>
+
+            <input type="email" id="newAdminEmail" class="add-admin-input" placeholder="New admin email">
+            <input type="password" id="newAdminPass" class="add-admin-input" placeholder="Password (min 6 characters)">
+
+            <button type="button" class="btn-primary" id="addAdminBtn">Make Admin</button>
+          </div>
+        </div>
+
+        <!-- APPEARANCE SECTION -->
+        <div id="appearanceSection" class="section-content">
+          <h2>Appearance Settings</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 20px;">
+            Customize the admin panel appearance. These settings affect only the admin interface.
+          </p>
+
+          <div class="appearance-grid">
+            <div class="theme-card-admin" data-theme="light" onclick="switchAdminTheme('light')">
+              <div class="theme-preview-admin light">
+                <div class="preview-header-admin"></div>
+                <div class="preview-table-admin"></div>
+                <div class="preview-table-admin"></div>
+              </div>
+              <div class="theme-info-admin">
+                <h4>Light Theme</h4>
+                <p>Default bright theme</p>
+              </div>
+              <div class="theme-check-admin">✓</div>
+            </div>
+
+            <div class="theme-card-admin" data-theme="dark" onclick="switchAdminTheme('dark')">
+              <div class="theme-preview-admin dark">
+                <div class="preview-header-admin"></div>
+                <div class="preview-table-admin"></div>
+                <div class="preview-table-admin"></div>
+              </div>
+              <div class="theme-info-admin">
+                <h4>Dark Theme</h4>
+                <p>Eyes-friendly dark mode</p>
+              </div>
+              <div class="theme-check-admin">✓</div>
+            </div>
+
+            <div class="theme-card-admin" data-theme="blue" onclick="switchAdminTheme('blue')">
+              <div class="theme-preview-admin blue">
+                <div class="preview-header-admin"></div>
+                <div class="preview-table-admin"></div>
+                <div class="preview-table-admin"></div>
+              </div>
+              <div class="theme-info-admin">
+                <h4>Blue Theme</h4>
+                <p>Professional blue scheme</p>
+              </div>
+              <div class="theme-check-admin">✓</div>
+            </div>
+
+            <div class="theme-card-admin" data-theme="green" onclick="switchAdminTheme('green')">
+              <div class="theme-preview-admin green">
+                <div class="preview-header-admin"></div>
+                <div class="preview-table-admin"></div>
+                <div class="preview-table-admin"></div>
+              </div>
+              <div class="theme-info-admin">
+                <h4>Green Theme</h4>
+                <p>Calming green interface</p>
+              </div>
+              <div class="theme-check-admin">✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for User Details -->
+    <div id="userDetailsModal" class="admin-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>User Details</h2>
+          <button class="close-modal">×</button>
+        </div>
+        <div id="modalBody">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>
